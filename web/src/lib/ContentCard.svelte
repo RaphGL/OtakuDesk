@@ -21,7 +21,9 @@
   <div class="card-content">
     <div class="has-text-centered is-flex is-flex-direction-column">
       <a {href} class="title is-5">{title}</a>
-      <a {href} class="subtitle is-6">{subtitle}</a>
+      {#if subtitle}
+        <a {href} class="subtitle is-6">{subtitle}</a>
+      {/if}
     </div>
   </div>
 </div>

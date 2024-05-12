@@ -1,4 +1,5 @@
 <script>
+  import LoginModal from '$lib/LoginModal.svelte';
   import { page } from "$app/stores";
 
   const pages = [
@@ -8,6 +9,7 @@
   ];
 
   let burgerActive = $state(false);
+  let loginActive = $state(false);
 </script>
 
 <div class="navbar is-spaced is-transparent">
@@ -16,7 +18,7 @@
     <div class="is-skeleton">OtakuDesk</div>
     <!-- hamburger menu icon -->
     <a
-      href
+      href="#"
       onclick={() => (burgerActive = !burgerActive)}
       class:is-active={burgerActive}
       role="button"
@@ -61,9 +63,11 @@
     <!-- account related menu and buttons -->
     <div class="navbar-end">
       <div class="buttons">
-        <button class="button is-success">Log In</button>
-        <button class="button is-light is-outlined">Sign Up</button>
+        <button onclick={() => loginActive = true } class="button is-success">Log In</button>
+        <button onclick={() => loginActive = true } class="button is-light is-outlined">Register</button>
       </div>
     </div>
   </div>
 </div>
+
+<LoginModal isActive={loginActive} onclose={() => loginActive = false} />
