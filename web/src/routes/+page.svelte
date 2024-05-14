@@ -1,6 +1,5 @@
 <script>
   import ContentCard from "$lib/ContentCard.svelte";
-  import Hero from "$lib/helpers/Hero.svelte";
 </script>
 
 {#snippet contents()}
@@ -17,9 +16,11 @@
 {/snippet}
 
 {#snippet section_title(title, href)}
-<Hero>
-  <p class="title">{title} <a {href} class="is-size-6 has-text-weight-light has-text-success" >View More</a></p>
-</Hero>
+<div class="hero">
+  <div class="hero-body">
+    <p class="title">{title} <a {href} class="is-size-6 has-text-weight-light has-text-success" >View More</a></p>
+  </div>
+</div>
 {/snippet}
 
 {@render section_title('Recently Watched', '#')}

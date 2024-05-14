@@ -1,10 +1,9 @@
 <script>
   import Pagination from "$lib/helpers/Pagination.svelte";
   import ContentCard from '$lib/ContentCard.svelte';
-  import Hero from '$lib/helpers/Hero.svelte'
 </script>
 
-<div class="hero is-dark">
+<div class="hero">
   <div class="hero-body">
     <h1 class="title has-text-centered">Anime Catalog</h1>
   </div>

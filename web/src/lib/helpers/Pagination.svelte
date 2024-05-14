@@ -1,7 +1,8 @@
 <!-- todo: improve how pages are generated -->
-<script>
+<script lang="ts">
   // one should bind to currPage to know what page to render
-  let { currPage = $bindable(1), maxPage  = 10} = $props();
+  type Props = { currPage: number, maxPage: number };
+  let { currPage = $bindable(1), maxPage  = 10}: Props = $props();
 
   let pages = [];
   for (let i = currPage; i <= maxPage; i++) {
@@ -10,9 +11,9 @@
 </script>
 
 <div class="is-flex is-justify-content-center">
-  <nav class="pagination" role="pagination" aria-label="pagination">
-    <a href="" class="pagination-previous">Prev</a>
-    <a href="" class="pagination-next">Next</a>
+  <nav class="pagination" aria-label="pagination">
+    <button onclick={() => --currPage} class="pagination-previous">Prev</button>
+    <button onclick={() => ++currPage} class="pagination-next">Next</button>
 
     <ul class="pagination-list">
       {#if currPage > maxPage}
