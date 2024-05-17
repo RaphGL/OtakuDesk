@@ -1,3 +1,4 @@
+<!-- anime/manga card with name and episode number -->
 <script>
   const {
     title = "Anime Name",
