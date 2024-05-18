@@ -1,9 +1,12 @@
 <script>
+  import EmailIcon from "$lib/icons/EmailIcon.svelte";
+  import PasswordIcon from "$lib/icons/PasswordIcon.svelte";
+  import UserIcon from '$lib/icons/UserIcon.svelte';
   let { isActive, onclose } = $props();
 
   // close modal on escape key
   function closeModalOnEscape(e) {
-    if (e.key === 'Escape') {
+    if (e.key === "Escape") {
       onclose();
     }
   }
@@ -16,31 +19,35 @@
 
   <div class="modal-content box p-6">
     <figure class="image is-3by1">
-    <image src="#" alt="website logo"></image>
+      <image src="#" alt="website logo"></image>
     </figure>
     <form>
       <div class="field">
-        <label for="username" class="label">Username</label>
-        <div class="control">
+        <div class="control has-icons-left">
           <input class="input" type="text" placeholder="username" />
+          <span class="icon is-small is-left">
+            <UserIcon />
+          </span>
         </div>
       </div>
 
       <!-- email field -->
       <div class="field">
-        <label for="email" class="label">Email</label>
         <div class="control has-icons-left">
           <input class="input" type="email" placeholder="email" />
-          <span class="icon is-small is-left">Email Icon</span>
+          <span class="icon is-small is-left">
+            <EmailIcon />
+          </span>
         </div>
-        <!-- password field -->
-        <div class="field">
-        <label for="password" class="label">Password</label>
-          <p class="control has-icons-left">
-            <input class="input" type="password" placeholder="password" />
-            <span class="icon is-small is-left"> Password Icon </span>
-          </p>
-        </div>
+      </div>
+      <!-- password field -->
+      <div class="field">
+        <p class="control has-icons-left">
+          <input class="input" type="password" placeholder="password" />
+          <span class="icon is-small is-left">
+            <PasswordIcon />
+          </span>
+        </p>
       </div>
       <!-- login and register buttons -->
       <div class="field is-grouped">
@@ -51,7 +58,7 @@
           <button class="button">Register</button>
         </div>
         <div class="control">
-          <a href='#' class="button is-text">Forgot your password?</a>
+          <a href="#" class="button is-text">Forgot your password?</a>
         </div>
       </div>
     </form>

@@ -1,6 +1,7 @@
 <script>
-  import LoginModal from '$lib/LoginModal.svelte';
+  import LoginModal from "$lib/LoginModal.svelte";
   import { page } from "$app/stores";
+  import SearchIcon from "$lib/icons/SearchIcon.svelte";
 
   const pages = [
     { title: "Home", route: "/" },
@@ -49,25 +50,32 @@
       {/each}
 
       <!-- search bar -->
-      <div class="control has-icons-right">
+      <div class="control has-icons-left mx-1">
+        <div class="icon is-small is-left">
+          <SearchIcon />
+        </div>
         <input
-          class="input is-rounded mx-3"
+          class="input is-rounded"
           type="text"
           placeholder="Search manga or anime..."
         />
         <!-- TODO: replace with search icon -->
-        <div class="icon is-small is-right ml-3">&</div>
       </div>
     </div>
 
     <!-- account related menu and buttons -->
     <div class="navbar-end">
-      <div class="buttons">
-        <button onclick={() => loginActive = true } class="button is-success">Log In</button>
-        <button onclick={() => loginActive = true } class="button is-light is-outlined">Register</button>
+      <div class="buttons my-3">
+        <button onclick={() => (loginActive = true)} class="button is-success"
+          >Log In</button
+        >
+        <button
+          onclick={() => (loginActive = true)}
+          class="button is-light is-outlined">Register</button
+        >
       </div>
     </div>
   </div>
 </div>
 
-<LoginModal isActive={loginActive} onclose={() => loginActive = false} />
+<LoginModal isActive={loginActive} onclose={() => (loginActive = false)} />

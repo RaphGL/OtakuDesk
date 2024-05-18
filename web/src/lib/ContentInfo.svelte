@@ -49,9 +49,27 @@
       {#each Object.entries(contentInfo) as [infoName, infoValue]}
         <li>
           <span class="has-text-light">{infoName}:</span>
-          <span class="has-text-success">{infoValue}</span>
+          <span class="has-text-success">
+            {#if infoValue instanceof Array}
+              {#each infoValue as value, i}
+                <a>{value}{i < infoValue.length - 1 ? "," : ""} </a>
+              {/each}
+            {:else}
+              {infoValue}
+            {/if}
+          </span>
         </li>
       {/each}
     </ul>
   </div>
 </div>
+
+<style>
+  a {
+    color: var(--bulma-success);
+  }
+
+  a:hover {
+    color: var(--bulma-link);
+  }
+</style>
