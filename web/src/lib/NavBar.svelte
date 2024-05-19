@@ -1,7 +1,8 @@
-<script>
+<script lang="ts">
   import LoginModal from "$lib/LoginModal.svelte";
   import { page } from "$app/stores";
   import SearchIcon from "$lib/icons/SearchIcon.svelte";
+  import type { ModalMode } from "$lib/LoginModal.svelte";
 
   const pages = [
     { title: "Home", route: "/" },
@@ -10,7 +11,18 @@
   ];
 
   let burgerActive = $state(false);
-  let loginActive = $state(false);
+  let modalActive = $state(false);
+  // changes depending on if the user clicks the register or the login button
+  let modalMode: ModalMode = $state("login");
+
+  function showModal(mode: ModalMode) {
+    modalMode = mode;
+    modalActive = true;
+  }
+
+  function hideModal() {      
+    modalActive = false;
+  }
 </script>
 
 <div class="navbar is-spaced is-transparent">
@@ -66,11 +78,11 @@
     <!-- account related menu and buttons -->
     <div class="navbar-end">
       <div class="buttons my-3">
-        <button onclick={() => (loginActive = true)} class="button is-success"
+        <button onclick={() => showModal("login")} class="button is-success"
           >Log In</button
         >
         <button
-          onclick={() => (loginActive = true)}
+          onclick={() => showModal("register")}
           class="button is-light is-outlined">Register</button
         >
       </div>
@@ -78,4 +90,4 @@
   </div>
 </div>
 
-<LoginModal isActive={loginActive} onclose={() => (loginActive = false)} />
+<LoginModal mode={modalMode} isActive={modalActive} onclose={hideModal} />

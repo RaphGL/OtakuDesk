@@ -1,11 +1,22 @@
-<script>
+<script context="module" lang="ts">
+  export type ModalMode = "register" | "login";
+</script>
+
+<script lang="ts">
   import EmailIcon from "$lib/icons/EmailIcon.svelte";
   import PasswordIcon from "$lib/icons/PasswordIcon.svelte";
-  import UserIcon from '$lib/icons/UserIcon.svelte';
-  let { isActive, onclose } = $props();
+  import UserIcon from "$lib/icons/UserIcon.svelte";
+
+  type Props = {
+    isActive: boolean;
+    onclose: () => void;
+    mode: ModalMode;
+  };
+
+  let { isActive = false, onclose, mode = "login" }: Props = $props();
 
   // close modal on escape key
-  function closeModalOnEscape(e) {
+  function closeModalOnEscape(e: KeyboardEvent) {
     if (e.key === "Escape") {
       onclose();
     }
@@ -22,14 +33,16 @@
       <image src="#" alt="website logo"></image>
     </figure>
     <form>
-      <div class="field">
-        <div class="control has-icons-left">
-          <input class="input" type="text" placeholder="username" />
-          <span class="icon is-small is-left">
-            <UserIcon />
-          </span>
+      {#if mode === "register"}
+        <div class="field">
+          <div class="control has-icons-left">
+            <input class="input" type="text" placeholder="username" />
+            <span class="icon is-small is-left">
+              <UserIcon />
+            </span>
+          </div>
         </div>
-      </div>
+      {/if}
 
       <!-- email field -->
       <div class="field">
@@ -51,15 +64,12 @@
       </div>
       <!-- login and register buttons -->
       <div class="field is-grouped">
-        <div class="control">
-          <button class="button is-success">Login</button>
-        </div>
-        <div class="control">
-          <button class="button">Register</button>
-        </div>
-        <div class="control">
-          <a href="#" class="button is-text">Forgot your password?</a>
-        </div>
+        {#if mode === "login"}
+            <button class="button is-fullwidth is-success">Login</button>
+            <a href="#" class="button is-text">Forgot your password?</a>
+        {:else if mode === "register"}
+            <button class="button is-fullwidth is-success">Register</button>
+        {/if}
       </div>
     </form>
   </div>
