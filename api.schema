@@ -1,0 +1,12 @@
+/login -> authenticates user
+/register -> creates new user
+
+/animes?page={i}&order={o} -> list animes available with filtering options
+/animes?page={i}&order={o} -> list mangas available with filtering options
+
+/anime/{name} -> returns info about an anime
+/manga/{name} -> returns info about a manga
+
+/anime/stream/{name}?episode={i}?chunk={c} -> streams anime video in chunks to client
+/anime/stream/{name}?chapter={i}?page={i} -> streams manga page or by photo to client or send it completely
+
