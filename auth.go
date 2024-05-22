@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/mail"
 
@@ -39,7 +38,7 @@ func (ac AuthCtx) NewToken(username string, passwordHash string) (string, error)
 
 func (ac AuthCtx) ReadToken(tokenStr string) (UserInfo, error) {
 	claims := jwt.MapClaims{}
-	token, err := jwt.ParseWithClaims(tokenStr, claims, func(t *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(tokenStr, claims, func(t *jwt.Token) (any, error) {
 		return []byte(ac.key), nil
 	})
 	if err != nil || !token.Valid {
@@ -53,7 +52,7 @@ func (ac AuthCtx) ReadToken(tokenStr string) (UserInfo, error) {
 }
 
 func (ac AuthCtx) IsValidToken(tokenStr string) bool {
-	token, err := jwt.Parse(tokenStr, func(t *jwt.Token) (interface{}, error) {
+	token, err := jwt.Parse(tokenStr, func(t *jwt.Token) (any, error) {
 		return []byte(ac.key), nil
 	})
 	if err != nil {
@@ -79,6 +78,7 @@ func (ac AuthCtx) HandleRegister(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(err.Error()))
 		return
 	}
+	defer r.Body.Close()
 
 	if !IsValidEmail(userInfo.Email) {
 		w.WriteHeader(http.StatusUnprocessableEntity)
@@ -94,7 +94,6 @@ func (ac AuthCtx) HandleRegister(w http.ResponseWriter, r *http.Request) {
 		eprintln(err)
 		return
 	}
-	fmt.Println(string(passHash))
 
 	_, err = rt.dbConn.Exec("INSERT INTO users (username, email, password) VALUES (?, ?, ?);", userInfo.Username, userInfo.Email, passHash)
 	if err != nil {
@@ -117,6 +116,7 @@ func (ac AuthCtx) HandleLogin(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(err.Error()))
 		return
 	}
+	defer r.Body.Close()
 
 	rt := ac.rt
 	res := rt.dbConn.QueryRow("SELECT email, username, password FROM users WHERE username = ?;", userInfo.Username)

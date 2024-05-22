@@ -21,6 +21,28 @@
       onclose();
     }
   }
+
+  let emailInput = $state(""),
+    usernameInput = $state(""),
+    passwordInput = $state("");
+
+  // todo: configure CORS so APIs can work
+  async function login() {}
+
+  async function register() {
+    const payload = await fetch("http://localhost:8080/register", {
+      method: "POST",
+      body: JSON.stringify({
+        email: emailInput,
+        username: usernameInput,
+        password: passwordInput,
+      }),
+    });
+
+    const resp = await payload.text();
+    // todo: change so that the modal gives a message that it's been successful and then move you to the login page
+    console.log(resp);
+  }
 </script>
 
 <svelte:window onkeyup={closeModalOnEscape} />
@@ -36,7 +58,12 @@
       {#if mode === "register"}
         <div class="field">
           <div class="control has-icons-left">
-            <input class="input" type="text" placeholder="username" />
+            <input
+              bind:value={usernameInput}
+              class="input"
+              type="text"
+              placeholder="username"
+            />
             <span class="icon is-small is-left">
               <UserIcon />
             </span>
@@ -47,7 +74,12 @@
       <!-- email field -->
       <div class="field">
         <div class="control has-icons-left">
-          <input class="input" type="email" placeholder="email" />
+          <input
+            bind:value={emailInput}
+            class="input"
+            type="email"
+            placeholder="email"
+          />
           <span class="icon is-small is-left">
             <EmailIcon />
           </span>
@@ -56,7 +88,12 @@
       <!-- password field -->
       <div class="field">
         <p class="control has-icons-left">
-          <input class="input" type="password" placeholder="password" />
+          <input
+            bind:value={passwordInput}
+            class="input"
+            type="password"
+            placeholder="password"
+          />
           <span class="icon is-small is-left">
             <PasswordIcon />
           </span>
@@ -65,10 +102,14 @@
       <!-- login and register buttons -->
       <div class="field is-grouped">
         {#if mode === "login"}
-            <button class="button is-fullwidth is-success">Login</button>
-            <a href="#" class="button is-text">Forgot your password?</a>
+          <button class="button is-fullwidth is-success" onclick={login}
+            >Login</button
+          >
+          <a href="#" class="button is-text">Forgot your password?</a>
         {:else if mode === "register"}
-            <button class="button is-fullwidth is-success">Register</button>
+          <button class="button is-fullwidth is-success" onclick={register}
+            >Register</button
+          >
         {/if}
       </div>
     </form>
