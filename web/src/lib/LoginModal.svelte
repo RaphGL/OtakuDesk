@@ -24,13 +24,13 @@
 
   let emailInput = $state(""),
     usernameInput = $state(""),
-    passwordInput = $state("");
+    passwordInput = $state(""),
+    responseNotification = $state("");
 
-  // todo: configure CORS so APIs can work
-  async function login() {}
-
+  // todo: store jwt when register is successful
   async function register() {
     const payload = await fetch("http://localhost:8080/register", {
+      mode: "cors",
       method: "POST",
       body: JSON.stringify({
         email: emailInput,
@@ -39,9 +39,21 @@
       }),
     });
 
-    const resp = await payload.text();
-    // todo: change so that the modal gives a message that it's been successful and then move you to the login page
-    console.log(resp);
+    responseNotification = await payload.text();
+  }
+
+  // todo: add authorization jwt token from local storage to request header
+  async function login() {
+    const payload = await fetch("http://localhost:8080/login", {
+      mode: "cors",
+      method: "POST",
+      body: JSON.stringify({
+        username: usernameInput,
+        password: passwordInput,
+      }),
+    });
+
+    responseNotification = await payload.text();
   }
 </script>
 
@@ -55,36 +67,36 @@
       <image src="#" alt="website logo"></image>
     </figure>
     <form>
+      <div class="field">
+        <div class="control has-icons-left">
+          <input
+            bind:value={usernameInput}
+            class="input"
+            type="text"
+            placeholder="username"
+          />
+          <span class="icon is-small is-left">
+            <UserIcon />
+          </span>
+        </div>
+      </div>
+
+      <!-- email field -->
       {#if mode === "register"}
         <div class="field">
           <div class="control has-icons-left">
             <input
-              bind:value={usernameInput}
+              bind:value={emailInput}
               class="input"
-              type="text"
-              placeholder="username"
+              type="email"
+              placeholder="email"
             />
             <span class="icon is-small is-left">
-              <UserIcon />
+              <EmailIcon />
             </span>
           </div>
         </div>
       {/if}
-
-      <!-- email field -->
-      <div class="field">
-        <div class="control has-icons-left">
-          <input
-            bind:value={emailInput}
-            class="input"
-            type="email"
-            placeholder="email"
-          />
-          <span class="icon is-small is-left">
-            <EmailIcon />
-          </span>
-        </div>
-      </div>
       <!-- password field -->
       <div class="field">
         <p class="control has-icons-left">
@@ -112,6 +124,13 @@
           >
         {/if}
       </div>
+
+      <!-- confirm successful login/registering -->
+      {#if responseNotification != ""}
+        <div class="notification has-text-centered has-text-weight-bold">
+          {responseNotification}
+        </div>
+      {/if}
     </form>
   </div>
 

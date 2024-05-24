@@ -1,7 +1,9 @@
 // adapted from https://github.com/justinas/alice
 package middleware
 
-import "net/http"
+import (
+	"net/http"
+)
 
 type Middleware func(http.Handler) http.Handler
 
@@ -10,7 +12,7 @@ type MiddlewareProxy struct {
 }
 
 func New(mids ...Middleware) MiddlewareProxy {
-	midsArr := make([]Middleware, len(mids))
+	midsArr := make([]Middleware, len(mids)-1)
 	midsArr = append(midsArr, mids...)
 	return MiddlewareProxy{mids: midsArr}
 }
@@ -22,6 +24,7 @@ func (mp MiddlewareProxy) Then(h http.Handler) http.Handler {
 	}
 
 	for i := range mp.mids {
+		// fmt.Println(runtime.FuncForPC(reflect.ValueOf(fn).Pointer()).Name())
 		mid = mp.mids[len(mp.mids)-i-1](h)
 	}
 	return mid

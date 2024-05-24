@@ -67,6 +67,7 @@ func IsValidEmail(addr string) bool {
 	return err == nil
 }
 
+// registers a new user
 func (ac AuthCtx) HandleRegister(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/text")
 
@@ -80,13 +81,24 @@ func (ac AuthCtx) HandleRegister(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
+	// don't bother continuing if the username is already in use
+	rt := ac.rt
+	row := rt.dbConn.QueryRow("SELECT username FROM users WHERE username = ?;", userInfo.Username)
+	var username string
+	row.Scan(&username)
+	if userInfo.Username == username {
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		w.Write([]byte("Username is already in use."))
+		return
+	}
+
+	// create a new user in the database
 	if !IsValidEmail(userInfo.Email) {
 		w.WriteHeader(http.StatusUnprocessableEntity)
 		w.Write([]byte("Invalid email format"))
 		return
 	}
 
-	rt := ac.rt
 	passHash, err := bcrypt.GenerateFromPassword([]byte(userInfo.Password), bcrypt.DefaultCost)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -106,6 +118,7 @@ func (ac AuthCtx) HandleRegister(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("User registered"))
 }
 
+// logs in an existing users and gives them a JWT token
 func (ac AuthCtx) HandleLogin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var userInfo UserInfo

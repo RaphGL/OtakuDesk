@@ -5,10 +5,12 @@ import (
 	_ "embed"
 	"errors"
 	"fmt"
-	_ "modernc.org/sqlite"
 	"net/http"
 	"os"
 	"path"
+
+	"github.com/raphgl/otakudesk/middleware"
+	_ "modernc.org/sqlite"
 )
 
 //go:embed tables.sql
@@ -71,8 +73,10 @@ func main() {
 		rt:  &rt,
 	}
 
-	mux.HandleFunc("POST /login", auth.HandleLogin)
-	mux.HandleFunc("POST /register", auth.HandleRegister)
+	defaultMw := middleware.New(middleware.CORS)
+
+	mux.Handle("POST /login", defaultMw.ThenFunc(auth.HandleLogin))
+	mux.Handle("POST /register", defaultMw.ThenFunc(auth.HandleRegister))
 
 	http.ListenAndServe(":8080", mux)
 }
