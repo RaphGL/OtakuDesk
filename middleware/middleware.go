@@ -24,7 +24,6 @@ func (mp MiddlewareProxy) Then(h http.Handler) http.Handler {
 	}
 
 	for i := range mp.mids {
-		// fmt.Println(runtime.FuncForPC(reflect.ValueOf(fn).Pointer()).Name())
 		mid = mp.mids[len(mp.mids)-i-1](h)
 	}
 	return mid

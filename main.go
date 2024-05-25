@@ -74,9 +74,24 @@ func main() {
 	}
 
 	defaultMw := middleware.New(middleware.CORS)
+	// authorizedMw := defaultMw.Extend(auth.AuthMiddleware)
 
 	mux.Handle("POST /login", defaultMw.ThenFunc(auth.HandleLogin))
 	mux.Handle("POST /register", defaultMw.ThenFunc(auth.HandleRegister))
+	mux.Handle("POST /logout", defaultMw.ThenFunc(HandleLogout))
+
+	// endpoint pinged to check is user is authenticated
+	mux.Handle("GET /is-auth", defaultMw.ThenFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/plain")
+		if _, err := auth.IsAuthenticated(r); err != nil {
+			w.WriteHeader(http.StatusForbidden)
+			w.Write([]byte("User is not authenticated."))
+			return
+		}
+
+		w.Write([]byte("User was authenticated."))
+		r.Body.Close()
+	}))
 
 	http.ListenAndServe(":8080", mux)
 }
