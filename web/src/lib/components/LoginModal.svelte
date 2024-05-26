@@ -44,9 +44,9 @@
   }
 
   async function login() {
-   const resp = await authStore.login(userInput); 
-   responseNotification = resp.response;
-   if (resp.ok) closeModal();
+    const resp = await authStore.login(userInput);
+    responseNotification = resp.response;
+    if (resp.ok) closeModal();
   }
 
   async function register() {
@@ -56,7 +56,6 @@
       setTimeout(closeModal, 1500);
     }
   }
-
 </script>
 
 <svelte:window onkeyup={closeModalOnEscape} />
@@ -89,20 +88,21 @@
         icon={PasswordIcon}
       />
       <!-- login and register buttons -->
-      <div class="field is-grouped">
-        {#if mode === "login"}
-          <button class="button is-fullwidth is-success" onclick={login}
-            >Login</button
-          >
-          <a href="#" class="button is-text">Forgot your password?</a>
-        {:else if mode === "register"}
-          <button class="button is-fullwidth is-success" onclick={register}
-            >Register</button
-          >
-        {/if}
-      </div>
-      <!-- confirm successful registering -->
-      {#if responseNotification != ""}
+      {#if responseNotification === ""}
+        <div class="field is-grouped">
+          {#if mode === "login"}
+            <button class="button is-fullwidth is-success" onclick={login}
+              >Login</button
+            >
+            <a href="#" class="button is-text">Forgot your password?</a>
+          {:else if mode === "register"}
+            <button class="button is-fullwidth is-success" onclick={register}
+              >Register</button
+            >
+          {/if}
+        </div>
+        <!-- confirm successful registering -->
+      {:else}
         <div
           class="notification is-info has-text-centered has-text-weight-bold"
         >

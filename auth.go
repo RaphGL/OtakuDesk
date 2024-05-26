@@ -140,17 +140,16 @@ func (ac AuthCtx) HandleLogin(w http.ResponseWriter, r *http.Request) {
 	res := rt.dbConn.QueryRow("SELECT email, username, password FROM users WHERE username = ?;", userInfo.Username)
 	var username, email string
 	var passHash []byte
-	if res.Scan(&email, &username, &passHash) == sql.ErrNoRows {
+	if errors.Is(res.Scan(&email, &username, &passHash), sql.ErrNoRows) {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("Database error"))
-		eprintln(err)
+		w.Write([]byte("Incorrect username or password."))
 		return
 	}
 
 	err = bcrypt.CompareHashAndPassword(passHash, []byte(userInfo.Password))
 	if err != nil {
 		w.WriteHeader(http.StatusForbidden)
-		w.Write([]byte("Incorrect username or password"))
+		w.Write([]byte("Incorrect username or password."))
 		return
 	}
 
@@ -159,7 +158,7 @@ func (ac AuthCtx) HandleLogin(w http.ResponseWriter, r *http.Request) {
 	})
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("Failed to generate new token"))
+		w.Write([]byte("Failed to generate new token."))
 		return
 	}
 
@@ -204,7 +203,7 @@ func (ac AuthCtx) IsAuthenticated(r *http.Request) (JWTContents, error) {
 	}
 
 	if len(cookie.Value) == 0 {
-		return JWTContents{}, errors.New("no cookie has been set yet")
+		return JWTContents{}, errors.New("User is not authenticated.")
 	}
 
 	authInfo, err := ac.ReadToken(cookie.Value)
@@ -222,4 +221,25 @@ func (ac AuthCtx) AuthMiddleware(next http.Handler) http.Handler {
 			next.ServeHTTP(w, r)
 		}
 	})
+}
+
+func (ac AuthCtx) CheckSessionValidity(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain")
+
+	userInfo, err := ac.IsAuthenticated(r)
+	if err != nil {
+		w.WriteHeader(http.StatusForbidden)
+		w.Write([]byte("User is not authenticated."))
+		return
+	}
+	defer r.Body.Close()
+
+	userJSON, err := json.Marshal(userInfo)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	w.Write(userJSON)
 }

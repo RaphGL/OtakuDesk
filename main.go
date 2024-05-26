@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	_ "embed"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -75,33 +74,14 @@ func main() {
 	}
 
 	defaultMw := middleware.New(middleware.CORS)
-	// authorizedMw := defaultMw.Extend(auth.AuthMiddleware)
 
 	mux.Handle("POST /login", defaultMw.ThenFunc(auth.HandleLogin))
 	mux.Handle("POST /register", defaultMw.ThenFunc(auth.HandleRegister))
 	mux.Handle("POST /logout", defaultMw.ThenFunc(HandleLogout))
-
 	// endpoint pinged to check is user is authenticated
-	mux.Handle("GET /is-auth", defaultMw.ThenFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/plain")
+	mux.Handle("GET /is-auth", defaultMw.ThenFunc(auth.CheckSessionValidity))
 
-		userInfo, err := auth.IsAuthenticated(r)
-		if err != nil {
-			w.WriteHeader(http.StatusForbidden)
-			w.Write([]byte("User is not authenticated."))
-			return
-		}
-		defer r.Body.Close()
-
-		userJSON, err := json.Marshal(userInfo)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
-			return
-		}
-
-		w.Write(userJSON)
-	}))
+	// authorizedMw := defaultMw.Extend(auth.AuthMiddleware)
 
 	http.ListenAndServe(":8080", mux)
 }

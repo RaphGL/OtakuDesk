@@ -4,11 +4,11 @@ GET /is-auth -> checks if user is authenticated
 POST /logout -> logs user out of session and deletes cookie
 
 GET /animes?page={i}&order={o} -> list animes available with filtering options
-GET /animes?page={i}&order={o} -> list mangas available with filtering options
+GET /mangas?page={i}&order={o} -> list mangas available with filtering options
 
 GET /anime/{name} -> returns info about an anime
 GET /manga/{name} -> returns info about a manga
 
-GET /anime/stream/{name}?episode={i}?chunk={c} -> streams anime video in chunks to client
-GET /anime/stream/{name}?chapter={i}?page={i} -> streams manga page or by photo to client or send it completely
+GET /stream/anime/{name}?episode={i}?chunk={c} -> streams anime video in chunks to client
+GET /stream/manga/{name}?chapter={i}?page={i} -> streams manga page or by photo to client or send it completely
 
