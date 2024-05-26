@@ -1,7 +1,11 @@
 <script>
   import 'bulma/css/bulma.css';
-  import NavBar from '$lib/NavBar.svelte';
-  import Footer from '$lib/Footer.svelte';
+  import NavBar from '$lib/components/NavBar.svelte';
+  import Footer from '$lib/components/Footer.svelte';
+  import { createAuthStore } from '$lib/stores/auth.svelte';
+
+  const authStore = createAuthStore();
+  $effect.pre(() => authStore.checkSessionValidity());
 </script>
 
 <NavBar />

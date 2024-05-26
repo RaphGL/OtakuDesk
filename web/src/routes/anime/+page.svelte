@@ -1,6 +1,6 @@
 <script>
   import Pagination from "$lib/helpers/Pagination.svelte";
-  import ContentCard from '$lib/ContentCard.svelte';
+  import ContentCard from '$lib/components/ContentCard.svelte';
 </script>
 
 <div class="hero">

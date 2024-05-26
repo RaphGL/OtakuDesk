@@ -1,5 +1,5 @@
 <script>
-  import ContentCard from "$lib/ContentCard.svelte";
+  import ContentCard from "$lib/components/ContentCard.svelte";
 </script>
 
 {#snippet contents()}

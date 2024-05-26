@@ -6,7 +6,8 @@
   import EmailIcon from "$lib/icons/EmailIcon.svelte";
   import PasswordIcon from "$lib/icons/PasswordIcon.svelte";
   import UserIcon from "$lib/icons/UserIcon.svelte";
-  import Input from "./helpers/Input.svelte";
+  import Input from "$lib/helpers/Input.svelte";
+  import { getAuthStore } from "$lib/stores/auth.svelte";
 
   type Props = {
     isActive: boolean;
@@ -15,6 +16,7 @@
   };
 
   let { isActive = false, onclose, mode = "login" }: Props = $props();
+  const authStore = getAuthStore();
 
   let userInput = $state({
     email: "",
@@ -41,41 +43,20 @@
     }
   }
 
-  async function register() {
-    const resp = await fetch("http://localhost:8080/register", {
-      mode: "cors",
-      method: "POST",
-      body: JSON.stringify({
-        email: userInput.email,
-        username: userInput.username,
-        password: userInput.password,
-      }),
-    });
-
-    responseNotification = await resp.text();
-    if (resp.ok) {
-      setTimeout(() => {
-        closeModal();
-      }, 1500);
-    }
-  }
-
-  // todo: add authorization jwt token from local storage to request header
   async function login() {
-    const resp = await fetch("http://localhost:8080/login", {
-      mode: "cors",
-      method: "POST",
-      credentials: 'include',
-      body: JSON.stringify({
-        username: userInput.username,
-        password: userInput.password,
-      }),
-    });
+   const resp = await authStore.login(userInput); 
+   responseNotification = resp.response;
+   if (resp.ok) closeModal();
+  }
 
+  async function register() {
+    const resp = await authStore.register(userInput);
+    responseNotification = resp.response;
     if (resp.ok) {
-      closeModal();
+      setTimeout(closeModal, 1500);
     }
   }
+
 </script>
 
 <svelte:window onkeyup={closeModalOnEscape} />

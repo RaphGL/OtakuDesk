@@ -1,6 +1,6 @@
 <script lang="ts">
-  import EpisodeList from "$lib/EpisodeList.svelte";
-  import ContentInfo from "$lib/ContentInfo.svelte";
+  import EpisodeList from "$lib/components/EpisodeList.svelte";
+  import ContentInfo from "$lib/components/ContentInfo.svelte";
 
   // todo: fetch anime from url path and database
 </script>

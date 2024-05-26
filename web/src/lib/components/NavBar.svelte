@@ -1,8 +1,11 @@
 <script lang="ts">
-  import LoginModal from "$lib/LoginModal.svelte";
+  import type { ModalMode } from "$lib/components/LoginModal.svelte";
   import { page } from "$app/stores";
+  import LoginModal from "$lib/components/LoginModal.svelte";
   import SearchIcon from "$lib/icons/SearchIcon.svelte";
-  import type { ModalMode } from "$lib/LoginModal.svelte";
+    import { getAuthStore } from "$lib/stores/auth.svelte";
+
+  const authStore = getAuthStore();
 
   const pages = [
     { title: "Home", route: "/" },
@@ -14,28 +17,6 @@
   let modalActive = $state(false);
   // changes depending on if the user clicks the register or the login button
   let modalMode: ModalMode = $state("login");
-
-  let isLoggedIn = $state(false);
-  $effect.pre(() => {
-    fetch("http://localhost:8080/is-auth", {
-      credentials: "include",
-      mode: "cors",
-    }).then((resp) => {
-      isLoggedIn = resp.ok;
-    });
-  });
-
-  // todo: move to be together with login and register functions
-  async function logout() {
-    let resp = await fetch("http://localhost:8080/logout", {
-    credentials: "include",
-    mode: 'cors',
-    method: 'POST',
-    })        
-    if (resp.ok) {
-      isLoggedIn = false;
-    }
-  }
 
   function showModal(mode: ModalMode) {
     modalMode = mode;
@@ -100,16 +81,16 @@
     <!-- account related menu and buttons -->
 
     <div class="navbar-end">
-      {#if isLoggedIn}
+      {#if authStore.isLoggedIn()}
         <div class="navbar-item has-dropdown is-hoverable">
           <!-- todo: retrieve username somehow -->
-          <div class="navbar-link is-arrowless p-3">Username</div>
+          <div class="navbar-link is-arrowless p-3">{authStore.getUsername()}</div>
 
           <div class="navbar-dropdown">
             <a class="navbar-item">Profile</a>
             <a class="navbar-item">Settings</a>
             <div class="navbar-divider" />
-            <button onclick={logout} class="navbar-item">Logout</button>
+            <button onclick={() => authStore.logout()} class="navbar-item">Logout</button>
           </div>
         </div>
       {:else}

@@ -1,6 +1,6 @@
 <script>
-  import ContentInfo from "$lib/ContentInfo.svelte";
-  import ChapterList from "$lib/ChapterList.svelte";
+  import ContentInfo from "$lib/components/ContentInfo.svelte";
+  import ChapterList from "$lib/components/ChapterList.svelte";
   import Pagination from "$lib/helpers/Pagination.svelte";
 </script>
 

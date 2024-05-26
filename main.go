@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	_ "embed"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -83,14 +84,23 @@ func main() {
 	// endpoint pinged to check is user is authenticated
 	mux.Handle("GET /is-auth", defaultMw.ThenFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/plain")
-		if _, err := auth.IsAuthenticated(r); err != nil {
+
+		userInfo, err := auth.IsAuthenticated(r)
+		if err != nil {
 			w.WriteHeader(http.StatusForbidden)
 			w.Write([]byte("User is not authenticated."))
 			return
 		}
+		defer r.Body.Close()
 
-		w.Write([]byte("User was authenticated."))
-		r.Body.Close()
+		userJSON, err := json.Marshal(userInfo)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		w.Write(userJSON)
 	}))
 
 	http.ListenAndServe(":8080", mux)
