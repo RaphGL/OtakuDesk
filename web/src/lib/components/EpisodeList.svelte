@@ -1,11 +1,24 @@
-<script>
-  let { currEpisode = $bindable(1), total = 10 } = $props();
+<script lang="ts">
+  import Dropdown from "$lib/helpers/Dropdown.svelte";
+
+  type Props = {
+    currEpisode: number;
+    total: number;
+  };
+  let { currEpisode = $bindable(1), total = 10 }: Props = $props();
 
   // todo: change with fetching episodes from database
-  const noOfEpisodes = [];
+  type Episode = {
+    ep: number;
+    title: string;
+  };
+
+  const episodes: Episode[] = [];
   for (let i = 1; i < total; i++) {
-    noOfEpisodes.push(i);
+    episodes.push({ ep: i, title: `Episode ${i}` });
   }
+
+  let selectedRange = $state("");
 </script>
 
 <div class="card m-2 p-4">
@@ -13,11 +26,11 @@
     <!-- selector to choose an episode range -->
     <div class="select is-small">
       <!-- todo: implement episode range selector -->
-      <select>
-        <option value="1-10">1-10</option>
-        <option value="10-20">10-20</option>
-        <option value="20-30">20-30</option>
-      </select>
+      <Dropdown
+        bind:value={selectedRange}
+        size="is-small"
+        items={["1-10", "10-20", "20-30"]}
+      />
     </div>
 
     <!-- input box to go to specific episode -->
@@ -37,12 +50,11 @@
   </div>
 
   <div class="card-content">
-    {#each noOfEpisodes as episode}
+    {#each episodes as { ep, title } (ep)}
       <button
-        onclick={() => (currEpisode = episode)}
+        onclick={() => (currEpisode = ep)}
         class="button is-fullwidth episode-link"
-        class:has-text-success={currEpisode === episode}
-        >Episode {episode}</button
+        class:has-text-success={currEpisode === ep}>{title}</button
       >
     {/each}
   </div>

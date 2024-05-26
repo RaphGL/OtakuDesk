@@ -90,7 +90,7 @@
             <a class="navbar-item">Profile</a>
             <a class="navbar-item">Settings</a>
             <div class="navbar-divider" />
-            <button onclick={() => authStore.logout()} class="navbar-item">Logout</button>
+            <a onclick={() => authStore.logout()} class="navbar-item">Logout</a>
           </div>
         </div>
       {:else}
