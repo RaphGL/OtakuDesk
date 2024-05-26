@@ -33,11 +33,9 @@
     <!-- website logo -->
     <div class="is-skeleton">OtakuDesk</div>
     <!-- hamburger menu icon -->
-    <a
-      href="#"
+    <button
       onclick={() => (burgerActive = !burgerActive)}
       class:is-active={burgerActive}
-      role="button"
       class="navbar-burger"
       aria-label="menu"
       aria-expanded="false"
@@ -46,7 +44,7 @@
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
-    </a>
+    </button>
   </div>
 
   <div class="navbar-menu" class:is-active={burgerActive}>
@@ -87,10 +85,10 @@
           <div class="navbar-link is-arrowless p-3">{authStore.getUsername()}</div>
 
           <div class="navbar-dropdown">
-            <a class="navbar-item">Profile</a>
-            <a class="navbar-item">Settings</a>
-            <div class="navbar-divider" />
-            <a onclick={() => authStore.logout()} class="navbar-item">Logout</a>
+            <a href="/profile" class="navbar-item">Profile</a>
+            <a href="/settings" class="navbar-item">Settings</a>
+            <div class="navbar-divider"></div>
+            <a href={'#'} role="button" tabindex="0" onclick={() => authStore.logout()} onkeyup={()=> authStore.logout()} class="navbar-item">Logout</a>
           </div>
         </div>
       {:else}
@@ -100,7 +98,7 @@
           >
           <button
             onclick={() => showModal("register")}
-            class="button is-light is-outlined">Register</button
+            class="button is-success is-outlined">Register</button
           >
         </div>
       {/if}

@@ -10,12 +10,8 @@
 
 <div class="card block p-2">
   <a {href} class="card-image">
-    <figure
-      alt="anime cover"
-      class="image is-4by3"
-      class:is-skeleton={imgsrc === "#"}
-    >
-      <img src={imgsrc} alt="anime cover" />
+    <figure class="image is-4by3" class:is-skeleton={imgsrc === "#"}>
+      <img alt="{title} - {subtitle}" src={imgsrc} />
     </figure>
   </a>
 

@@ -4,14 +4,13 @@
 
 {#snippet contents()}
 <div class="columns is-col-min-9 box is-shadowless mx-5 x-scrollable">
-  <div class="column"><ContentCard /></div>
-  <div class="column"><ContentCard /></div>
-  <div class="column"><ContentCard /></div>
-  <div class="column"><ContentCard /></div>
-  <div class="column"><ContentCard /></div>
-  <div class="column"><ContentCard /></div>
-  <div class="column"><ContentCard /></div>
-  <div class="column"><ContentCard /></div>
+  <div class="column"><ContentCard imgsrc="https://bulma.io/assets/images/placeholders/128x128.png" /></div>
+  <div class="column"><ContentCard imgsrc="https://bulma.io/assets/images/placeholders/128x128.png" /></div>
+  <div class="column"><ContentCard imgsrc="https://bulma.io/assets/images/placeholders/128x128.png" /></div>
+  <div class="column"><ContentCard imgsrc="https://bulma.io/assets/images/placeholders/128x128.png" /></div>
+  <div class="column"><ContentCard imgsrc="https://bulma.io/assets/images/placeholders/128x128.png" /></div>
+  <div class="column"><ContentCard imgsrc="https://bulma.io/assets/images/placeholders/128x128.png" /></div>
+  <div class="column"><ContentCard imgsrc="https://bulma.io/assets/images/placeholders/128x128.png" /></div>
 </div>
 {/snippet}
 

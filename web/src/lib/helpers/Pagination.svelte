@@ -18,7 +18,7 @@
     <ul class="pagination-list">
       {#if currPage > maxPage}
         <li>
-          <a href="#" class="pagination-link" aria-label="Goto page 1">1</a>
+          <button class="pagination-link" aria-label="Goto page 1">1</button>
         </li>
         <li>
           <span class="pagination-ellipsis">&hellip;</span>

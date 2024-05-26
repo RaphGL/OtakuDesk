@@ -4,10 +4,12 @@
   import Footer from '$lib/components/Footer.svelte';
   import { createAuthStore } from '$lib/stores/auth.svelte';
 
+  const {children} = $props();
+
   const authStore = createAuthStore();
   $effect.pre(() => authStore.checkSessionValidity());
 </script>
 
 <NavBar />
-<slot />
+{@render children()}
 <Footer />

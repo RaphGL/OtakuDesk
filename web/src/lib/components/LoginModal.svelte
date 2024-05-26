@@ -61,11 +61,21 @@
 <svelte:window onkeyup={closeModalOnEscape} />
 
 <div class="modal" class:is-active={isActive}>
-  <div onclick={closeModal} class="modal-background"></div>
+  <div
+    onkeyup={closeModal}
+    role="button"
+    tabindex="0"
+    onclick={closeModal}
+    class="modal-background"
+  ></div>
   <div class="modal-content box p-6">
-    <figure class="image is-3by1">
-      <image src="#" alt="website logo"></image>
+    <figure class="field image is-3by1">
+      <img
+        src="https://bulma.io/assets/images/placeholders/128x128.png"
+        alt="website logo"
+      />
     </figure>
+
     <form>
       <Input
         type="text"
@@ -94,7 +104,7 @@
             <button class="button is-fullwidth is-success" onclick={login}
               >Login</button
             >
-            <a href="#" class="button is-text">Forgot your password?</a>
+            <button class="button is-text">Forgot your password?</button>
           {:else if mode === "register"}
             <button class="button is-fullwidth is-success" onclick={register}
               >Register</button
@@ -112,5 +122,5 @@
     </form>
   </div>
 
-  <div onclick={closeModal} class="modal-close"></div>
+  <button onclick={closeModal} class="modal-close"></button>
 </div>

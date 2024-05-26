@@ -30,9 +30,9 @@
 
 <!-- section with information about the anime/manga -->
 <div class="columns container">
-  <div class="column is-one-third is-skeleton">
+  <div class="column is-one-third">
     <figure class="image is-4by5">
-      <img src="anime cover" alt="#" />
+      <img src="https://bulma.io/assets/images/placeholders/128x128.png" alt="#" />
     </figure>
   </div>
   <div class="column">
@@ -48,11 +48,11 @@
     <ul class="my-4">
       {#each Object.entries(contentInfo) as [infoName, infoValue]}
         <li>
-          <span class="has-text-light">{infoName}:</span>
+          <span>{infoName}:</span>
           <span class="has-text-success">
             {#if infoValue instanceof Array}
               {#each infoValue as value, i}
-                <a>{value}{i < infoValue.length - 1 ? "," : ""} </a>
+                <a href="/tag/{value}">{value}{i < infoValue.length - 1 ? "," : ""} </a>
               {/each}
             {:else}
               {infoValue}
