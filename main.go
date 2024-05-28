@@ -1,13 +1,16 @@
+// todo: add logger
 package main
 
 import (
 	"database/sql"
 	_ "embed"
 	"errors"
+	"flag"
 	"fmt"
 	"net/http"
 	"os"
 	"path"
+	"path/filepath"
 
 	"github.com/raphgl/otakudesk/middleware"
 	_ "modernc.org/sqlite"
@@ -24,17 +27,12 @@ func eprintln(err any) {
 	fmt.Fprintln(os.Stderr, "Error:", err)
 }
 
-func initRuntime() (RuntimeCtx, error) {
+func initRuntime(lookupPath string) (RuntimeCtx, error) {
 	var rtErr error
 
 	const PATH_ENV = "OTAKUDESK_PATH"
-	rtPath := os.Getenv(PATH_ENV)
-	if rtPath == "" {
-		pathErr := errors.New("No lookup path has been set in " + PATH_ENV)
-		rtErr = errors.Join(rtErr, pathErr)
-	}
 
-	db, err := sql.Open("sqlite", path.Join(rtPath, "otakudesk.sqlite"))
+	db, err := sql.Open("sqlite", path.Join(lookupPath, "otakudesk.sqlite"))
 	if err != nil {
 		rtErr = errors.Join(rtErr, err)
 	}
@@ -60,8 +58,19 @@ func (rt *RuntimeCtx) destroy() {
 }
 
 func main() {
+	// --- flag parsing
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		eprintln(err)
+		return
+	}
+
+	lookupPath := flag.String("path", filepath.Join(homeDir, "OtakuDesk"), "Lookup path for content delivered by the server")
+	flag.Parse()
+
+	// --- http server configuration
 	mux := http.NewServeMux()
-	rt, err := initRuntime()
+	rt, err := initRuntime(*lookupPath)
 	if err != nil {
 		eprintln(err)
 		return
