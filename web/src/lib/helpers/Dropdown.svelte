@@ -2,7 +2,7 @@
   type Props = {
     value: string;
     items: string[];
-    size: "is-small" | "" | "is-medium" | "is-large";
+    size?: "is-small" | "" | "is-medium" | "is-large";
   };
 
   let {
