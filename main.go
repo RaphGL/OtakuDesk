@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"path"
 	"path/filepath"
 
 	"github.com/raphgl/otakudesk/middleware"
@@ -20,7 +19,10 @@ import (
 var schemaSQL string
 
 type RuntimeCtx struct {
-	dbConn *sql.DB
+	lookupPath string
+	animePath  string
+	mangaPath  string
+	db         *sql.DB
 }
 
 func eprintln(err any) {
@@ -32,7 +34,7 @@ func initRuntime(lookupPath string) (RuntimeCtx, error) {
 
 	const PATH_ENV = "OTAKUDESK_PATH"
 
-	db, err := sql.Open("sqlite", path.Join(lookupPath, "otakudesk.sqlite"))
+	db, err := sql.Open("sqlite", filepath.Join(lookupPath, "otakudesk.sqlite"))
 	if err != nil {
 		rtErr = errors.Join(rtErr, err)
 	}
@@ -49,12 +51,15 @@ func initRuntime(lookupPath string) (RuntimeCtx, error) {
 	}
 
 	return RuntimeCtx{
-		dbConn: db,
+		lookupPath: lookupPath,
+		animePath:  filepath.Join(lookupPath, "anime"),
+		mangaPath:  filepath.Join(lookupPath, "manga"),
+		db:         db,
 	}, rtErr
 }
 
 func (rt *RuntimeCtx) destroy() {
-	rt.dbConn.Close()
+	rt.db.Close()
 }
 
 func main() {
