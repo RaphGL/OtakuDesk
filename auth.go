@@ -87,7 +87,7 @@ func (ac AuthCtx) HandleRegister(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	rt := ac.rt
-	row := rt.db.QueryRow("SELECT username FROM users WHERE username = ?;", userInfo.Username)
+	row := rt.DB.QueryRow("SELECT username FROM users WHERE username = ?;", userInfo.Username)
 	var username string
 	row.Scan(&username)
 	// don't bother continuing if the username is already in use
@@ -112,7 +112,7 @@ func (ac AuthCtx) HandleRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = rt.db.Exec("INSERT INTO users (username, email, password) VALUES (?, ?, ?);", userInfo.Username, userInfo.Email, passHash)
+	_, err = rt.DB.Exec("INSERT INTO users (username, email, password) VALUES (?, ?, ?);", userInfo.Username, userInfo.Email, passHash)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("Database error"))
@@ -137,7 +137,7 @@ func (ac AuthCtx) HandleLogin(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	rt := ac.rt
-	res := rt.db.QueryRow("SELECT email, username, password FROM users WHERE username = ?;", userInfo.Username)
+	res := rt.DB.QueryRow("SELECT email, username, password FROM users WHERE username = ?;", userInfo.Username)
 	var username, email string
 	var passHash []byte
 	if errors.Is(res.Scan(&email, &username, &passHash), sql.ErrNoRows) {

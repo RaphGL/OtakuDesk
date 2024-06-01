@@ -19,10 +19,10 @@ import (
 var schemaSQL string
 
 type RuntimeCtx struct {
-	lookupPath string
-	animePath  string
-	mangaPath  string
-	db         *sql.DB
+	LookupPath string
+	AnimePath  string
+	MangaPath  string
+	DB         *sql.DB
 }
 
 func eprintln(err any) {
@@ -38,6 +38,7 @@ func initRuntime(lookupPath string) (RuntimeCtx, error) {
 	if err != nil {
 		rtErr = errors.Join(rtErr, err)
 	}
+	db.SetMaxOpenConns(1)
 
 	if err = db.Ping(); err != nil {
 		rtErr = errors.Join(rtErr, err)
@@ -51,15 +52,15 @@ func initRuntime(lookupPath string) (RuntimeCtx, error) {
 	}
 
 	return RuntimeCtx{
-		lookupPath: lookupPath,
-		animePath:  filepath.Join(lookupPath, "anime"),
-		mangaPath:  filepath.Join(lookupPath, "manga"),
-		db:         db,
+		LookupPath: lookupPath,
+		AnimePath:  filepath.Join(lookupPath, "anime"),
+		MangaPath:  filepath.Join(lookupPath, "manga"),
+		DB:         db,
 	}, rtErr
 }
 
 func (rt *RuntimeCtx) destroy() {
-	rt.db.Close()
+	rt.DB.Close()
 }
 
 func main() {
@@ -86,6 +87,9 @@ func main() {
 		key: "test",
 		rt:  &rt,
 	}
+	media := MediaCtx{
+		rt: &rt,
+	}
 
 	defaultMw := middleware.New(middleware.CORS)
 
@@ -94,8 +98,16 @@ func main() {
 	mux.Handle("POST /logout", defaultMw.ThenFunc(HandleLogout))
 	// endpoint pinged to check is user is authenticated
 	mux.Handle("GET /is-auth", defaultMw.ThenFunc(auth.CheckSessionValidity))
+	mux.Handle("GET /animes", defaultMw.Then(media.ListMedia(MediaTypeAnime)))
+	mux.Handle("GET /mangas", defaultMw.Then(media.ListMedia(MediaTypeManga)))
 
 	// authorizedMw := defaultMw.Extend(auth.AuthMiddleware)
 
+	// todo: recache if cache paths in database don't start with $OTAKUDESK_PATH
+	if err := media.cacheMediaListToDB(); err != nil {
+		eprintln(err)
+	}
+
+	fmt.Println("Running server on localhost:8080")
 	http.ListenAndServe(":8080", mux)
 }
