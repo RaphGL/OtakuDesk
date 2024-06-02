@@ -32,8 +32,6 @@ func eprintln(err any) {
 func initRuntime(lookupPath string) (RuntimeCtx, error) {
 	var rtErr error
 
-	const PATH_ENV = "OTAKUDESK_PATH"
-
 	db, err := sql.Open("sqlite", filepath.Join(lookupPath, "otakudesk.sqlite"))
 	if err != nil {
 		rtErr = errors.Join(rtErr, err)

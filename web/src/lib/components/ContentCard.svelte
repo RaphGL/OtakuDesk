@@ -2,7 +2,7 @@
 <script>
   const {
     title = "Anime Name",
-    subtitle = "Episode XY",
+    subtitle = "",
     href = "#", // link for the anime/manga page
     imgsrc = "#", // thumbnail link
   } = $props();

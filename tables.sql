@@ -7,10 +7,22 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS manga (
     name TEXT NOT NULL,  
-    path TEXT NOT NULL
+    path TEXT NOT NULL,
+    episode INTEGER,
+    curr_episode INTEGER,
+    total_episodes INTEGER,
+    chapter INTEGER, 
+    curr_chapter INTEGER,
+    total_chapters INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS anime (
     name TEXT NOT NULL,  
-    path TEXT NOT NULL
+    path TEXT NOT NULL,
+    episode INTEGER,
+    curr_episode INTEGER,
+    total_episodes INTEGER,
+    chapter INTEGER, 
+    curr_chapter INTEGER,
+    total_chapters INTEGER
 );

@@ -1,19 +1,37 @@
-<!-- todo: improve how pages are generated -->
 <script lang="ts">
   // one should bind to currPage to know what page to render
-  type Props = { currPage: number, maxPage: number };
-  let { currPage = $bindable(1), maxPage  = 10}: Props = $props();
+  type Props = { currPage: number; maxPage: number };
+  let { currPage = $bindable(0), maxPage = $bindable(10) }: Props = $props();
 
-  let pages = [];
-  for (let i = currPage; i <= maxPage; i++) {
-    pages.push(i);
+  function range(begin: number, end: number) {
+    let pages = [];
+    for (let i = begin; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
+
+  function prevPage() {
+    if (currPage > 0) --currPage;
+  }
+
+  function nextPage() {
+    if (currPage < maxPage - 1) ++currPage;
+  }
+
+  let pages = $derived.by(() => {
+    let minShownPage = currPage - 4;
+    if (minShownPage < 0) minShownPage = 0;
+    let maxShownPage = currPage + 5;
+    if (maxShownPage > maxPage) maxShownPage = maxPage;
+    return range(minShownPage, maxShownPage);
+  });
 </script>
 
 <div class="is-flex is-justify-content-center">
   <nav class="pagination" aria-label="pagination">
-    <button onclick={() => --currPage} class="pagination-previous">Prev</button>
-    <button onclick={() => ++currPage} class="pagination-next">Next</button>
+    <button onclick={prevPage} class="pagination-previous">Prev</button>
+    <button onclick={nextPage} class="pagination-next">Next</button>
 
     <ul class="pagination-list">
       {#if currPage > maxPage}
@@ -28,14 +46,13 @@
       {#each pages as page}
         <li>
           <button
-            onclick={() => currPage = page}
+            onclick={() => (currPage = page)}
             class="pagination-link"
             class:is-current={page === currPage}
-            aria-label="Goto page {page}">{page}</button
+            aria-label="Goto page {page}">{page + 1}</button
           >
         </li>
       {/each}
-
     </ul>
   </nav>
 </div>
