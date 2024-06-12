@@ -32,7 +32,10 @@
 <div class="columns container">
   <div class="column is-one-third">
     <figure class="image is-4by5">
-      <img src="https://bulma.io/assets/images/placeholders/128x128.png" alt="#" />
+      <img
+        src="https://bulma.io/assets/images/placeholders/128x128.png"
+        alt="#"
+      />
     </figure>
   </div>
   <div class="column">
@@ -49,15 +52,17 @@
       {#each Object.entries(contentInfo) as [infoName, infoValue]}
         <li>
           <span>{infoName}:</span>
-          <span class="has-text-success">
-            {#if infoValue instanceof Array}
-              {#each infoValue as value, i}
-                <a href="/tag/{value}">{value}{i < infoValue.length - 1 ? "," : ""} </a>
-              {/each}
-            {:else}
+          {#if infoValue instanceof Array}
+            {#each infoValue as value, i}
+              <a href="/tag/{value}"
+                >{value}{i < infoValue.length - 1 ? "," : ""}
+              </a>
+            {/each}
+          {:else}
+            <span class="has-text-white">
               {infoValue}
-            {/if}
-          </span>
+            </span>
+          {/if}
         </li>
       {/each}
     </ul>

@@ -31,10 +31,10 @@ func (mc MediaCtx) cacheMediaListToDB() error {
 
 		switch mtyp {
 		case MediaTypeAnime:
-			query = "INSERT INTO anime (name, path) VALUES (?, ?);"
+			query = "INSERT OR IGNORE INTO anime (name, path) VALUES (?, ?);"
 			mediaPath = rt.AnimePath
 		case MediaTypeManga:
-			query = "INSERT INTO manga (name, path) VALUES (?, ?);"
+			query = "INSERT OR IGNORE INTO manga (name, path) VALUES (?, ?);"
 			mediaPath = rt.MangaPath
 		}
 
@@ -137,7 +137,7 @@ func (mc MediaCtx) ListMedia(mtyp MediaType) http.Handler {
 
 type MediaInfoResp struct{}
 
-// returns info about manga either from cache or from external API like anilist or myanimelist
+// returns info about anime/manga either from cache or from external API like anilist or myanimelist
 func (MediaCtx) GetMediaInfo(mtyp MediaType) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})
 }

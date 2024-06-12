@@ -38,8 +38,9 @@
   }
 
   let animes: AnimeItem[] = $state([]);
+  let failedToLoad = $state(false);
   $effect(() => {
-    loadMediaList().then((mediaList) => (animes = mediaList));
+    loadMediaList().then((mediaList) => (animes = mediaList)).catch(() => failedToLoad = true);
   });
 </script>
 
@@ -57,19 +58,25 @@
 </div>
 
 <div class="my-6">
-  <div class="container fixed-grid has-5-cols container">
-    <div class="grid">
-      {#if animes}
-        {#each animes.slice(currPage * ITEMS_PER_PAGE, currPage * ITEMS_PER_PAGE + ITEMS_PER_PAGE) as anime}
-          <div class="cell">
-            <ContentCard title={anime.name} href={anime.path} />
-          </div>
-        {/each}
-      {/if}
+  {#if failedToLoad}
+      <div class="container">
+        Failed to load page!
+      </div>
+  {:else}
+    <div class="container fixed-grid has-5-cols container">
+      <div class="grid">
+        {#if animes}
+          {#each animes.slice(currPage * ITEMS_PER_PAGE, currPage * ITEMS_PER_PAGE + ITEMS_PER_PAGE) as anime}
+            <div class="cell">
+              <ContentCard title={anime.name} href={anime.path} />
+            </div>
+          {/each}
+        {/if}
+      </div>
     </div>
-  </div>
 
-  {#if maxPage > 1}
-    <Pagination bind:currPage bind:maxPage />
+    {#if maxPage > 1}
+      <Pagination bind:currPage bind:maxPage />
+    {/if}
   {/if}
 </div>
